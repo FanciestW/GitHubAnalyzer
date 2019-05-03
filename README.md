@@ -1,2 +1,2 @@
-# github_analyzer
+# GithubAnalyzer
 A Python data science project to analyze GitHub data from Google Big Query's public dataset.
