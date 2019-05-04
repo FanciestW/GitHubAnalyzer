@@ -1,4 +1,6 @@
 import argparse
+from GitHubAnalyzer.Grapher import Grapher
+from GitHubAnalyzer.Analyzer import Analyzer
 
 def main():
     # Get CLI arguments for program required options.
