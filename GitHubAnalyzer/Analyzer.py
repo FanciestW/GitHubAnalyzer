@@ -5,10 +5,19 @@ class Analyzer:
     filename = None         # The name of the input file for data.
     data = None             # Data as pandas dataframes.
 
-    def __init__(self):
+    def __init__(self, file: str):
+        if file.endswith(".csv"):
+            pass
+        elif file.endswith(".json"):
+            pass
+        else:
+            print("File must be a JSON or CSV file.")
+            sys.exit(0)
+        self.filename = file
+        file = open(self.filename)
         pass
 
-    def getTopLanguages(self, num):
+    def getTopLanguages(self, num: int) -> list:
         """
             Gets the top repository languages in descending order.
             
@@ -24,7 +33,7 @@ class Analyzer:
         """
         pass
 
-    def getTopCountries(self, num):
+    def getTopCountries(self, num: int) -> list:
         """
             Gets the top countries for repository creation in descending order.
 
@@ -40,7 +49,7 @@ class Analyzer:
         """
         pass
 
-    def getPopularRepo(self, num):
+    def getPopularRepo(self, num: int) -> list:
         """
             Gets the top most popular repositories.
 

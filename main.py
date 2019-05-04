@@ -12,8 +12,9 @@ def main():
         default="data/sample.json", help="File with data to analyze."
     )
     args = argparser.parse_args()
-
     print(args.file)
+
+    analyzer = Analyzer(args.file)
 
 if __name__ == "__main__":
     main()
