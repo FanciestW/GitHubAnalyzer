@@ -2,20 +2,20 @@ import pandas as pd
 
 class Analyzer:
 
-    filename = None         # The name of the input file for data.
-    data = None             # Data as pandas dataframes.
+    filename: str         # The name of the input file for data.
+    data: pd.DataFrame             # Data as pandas dataframes.
 
     def __init__(self, file: str):
+        self.filename = file
         if file.endswith(".csv"):
-            pass
+            self.data = pd.read_csv(self.filename)
         elif file.endswith(".json"):
-            pass
+            self.data = pd.read_json(self.filename, lines=True)
         else:
             print("File must be a JSON or CSV file.")
             sys.exit(0)
         self.filename = file
         file = open(self.filename)
-        pass
 
     def getTopLanguages(self, num: int) -> list:
         """

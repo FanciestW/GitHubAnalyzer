@@ -9,7 +9,7 @@ def main():
         "--file",
         "-f",
         type=str,
-        default="data/sample.json", help="File with data to analyze."
+        default="data/sample.csv", help="File with data to analyze."
     )
     args = argparser.parse_args()
     print(args.file)
