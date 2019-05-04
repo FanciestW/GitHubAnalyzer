@@ -14,8 +14,6 @@ class Analyzer:
         else:
             print("File must be a JSON or CSV file.")
             sys.exit(0)
-        self.filename = file
-        file = open(self.filename)
 
     def getTopLanguages(self, num: int) -> list:
         """
