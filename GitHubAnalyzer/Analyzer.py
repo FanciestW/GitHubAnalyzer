@@ -7,12 +7,12 @@ class Analyzer:
 
     def __init__(self, file: str):
         self.filename = file
-        if file.endswith(".csv"):
+        if file.endswith('.csv'):
             self.data = pd.read_csv(self.filename)
-        elif file.endswith(".json"):
+        elif file.endswith('.json'):
             self.data = pd.read_json(self.filename, lines=True)
         else:
-            print("File must be a JSON or CSV file.")
+            print('File must be a JSON or CSV file.')
             sys.exit(0)
 
     def getTopLanguages(self, num: int) -> list:
@@ -29,7 +29,11 @@ class Analyzer:
             list: str
                 A list of strings containing the top languages.
         """
-        pass
+        lang_count = self.data.groupby('repository_language').count()
+        lang_rank = lang_count.sort_values('repository_url', ascending=False)
+        # TODO::Fix top language getter
+        top_languages = lang_rank.nlargest(num, ['repository_url', 'repository_language'], keep='all')
+        print(top_languages)
 
     def getTopCountries(self, num: int) -> list:
         """

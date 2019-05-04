@@ -15,6 +15,7 @@ def main():
     print(args.file)
 
     analyzer = Analyzer(args.file)
+    analyzer.getTopLanguages(10)
 
 if __name__ == "__main__":
     main()
