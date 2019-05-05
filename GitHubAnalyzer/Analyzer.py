@@ -82,7 +82,9 @@ class Analyzer:
         unique_repos = self.data['repository_url'].value_counts().index.values
         for repo in unique_repos:
             owner = self.data[self.data['repository_url'] == repo].iloc[0]['repository_owner']
-            print(owner)
+            location = self.data[self.data['actor_attributes_login'] == owner]
+            if location:
+                print(location)
             # owner_location = self.data[self.data['actor_attributes_login'] == owner]
             # print(owner_location)
 
