@@ -79,7 +79,12 @@ class Analyzer:
             list: tuple
                 A list of tuples containing the top locations based on repository count.
         """
-        pass
+        unique_repos = self.data['repository_url'].value_counts().index.values
+        for repo in unique_repos:
+            owner = self.data[self.data['repository_url'] == repo].iloc[0]['repository_owner']
+            print(owner)
+            # owner_location = self.data[self.data['actor_attributes_login'] == owner]
+            # print(owner_location)
 
     def countryTopLanguages(self, country, num):
         """
@@ -118,4 +123,4 @@ class Analyzer:
             list: str
                 A list of strings containing the most popular repositories.
         """
-        pass
+        repo_event_count = self.data['repository_url'].value_counts()
