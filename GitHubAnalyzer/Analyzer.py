@@ -34,7 +34,7 @@ class Analyzer:
         lang_rank = lang_count.sort_values('repository_url', ascending=False)
         lang_rank = lang_rank.nlargest(num, ['repository_url'], keep='all')
         top_langs = lang_rank['repository_url']
-        return list(zip(top_langs.index.values, top_langs.values))
+        return (top_langs.index.values, top_langs.values)
 
     def getTopCountries(self, num: int) -> list:
         """
