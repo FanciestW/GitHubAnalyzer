@@ -6,6 +6,20 @@ class Grapher:
         pass
 
     def top_bar_chart(self, x_labels, data, y_label, title):
+        """
+            Graphs a top N bar graph with labels.
+
+            Parameters
+            ----------
+            x_labels: list[str]
+                A list of labels to discribe each graphed data on the x label axis.
+            data: list[int]
+                Y values for each corresponding x value from x_labels.
+            y_label: str
+                The y label string to describe what is bring plotted.
+            title: str
+                The title of the graph.
+        """
         fig, ax = plt.subplots()
         ax.bar(x_labels, data, align='edge')
         for i, n in enumerate(data):
@@ -16,3 +30,6 @@ class Grapher:
         plt.title(title)
         plt.show()
         return fig
+
+    def top_3d_bar(self, x_labels, xdata, ydata, title):
+        pass
