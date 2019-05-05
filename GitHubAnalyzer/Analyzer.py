@@ -2,8 +2,8 @@ import pandas as pd
 
 class Analyzer:
 
-    filename: str         # The name of the input file for data.
-    data: pd.DataFrame             # Data as pandas dataframes.
+    filename: str                   # The name of the input file for data.
+    data: pd.DataFrame              # Data as pandas dataframes.
 
     def __init__(self, file: str):
         self.filename = file
@@ -27,13 +27,14 @@ class Analyzer:
             Returns
             -------
             list: str
-                A list of strings containing the top languages.
+                A list of tuples containing the top languages and their
+                popularity based on how many repositories used that language.
         """
         lang_count = self.data.groupby('repository_language').count()
         lang_rank = lang_count.sort_values('repository_url', ascending=False)
-        # TODO::Fix top language getter
-        top_languages = lang_rank.nlargest(num, ['repository_url', 'repository_language'], keep='all')
-        print(top_languages)
+        lang_rank = lang_rank.nlargest(num, ['repository_url'], keep='all')
+        top_langs = lang_rank['repository_url']
+        return list(zip(top_langs.index.values, top_langs.values))
 
     def getTopCountries(self, num: int) -> list:
         """

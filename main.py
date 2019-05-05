@@ -9,13 +9,12 @@ def main():
         "--file",
         "-f",
         type=str,
-        default="data/sample.csv", help="File with data to analyze."
+        default="data/sample0.csv", help="File with data to analyze."
     )
     args = argparser.parse_args()
-    print(args.file)
 
     analyzer = Analyzer(args.file)
-    analyzer.getTopLanguages(10)
+    top_10_langs = analyzer.getTopLanguages(10)
 
 if __name__ == "__main__":
     main()
