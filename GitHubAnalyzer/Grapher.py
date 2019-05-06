@@ -1,4 +1,6 @@
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+import numpy as np
 
 class Grapher:
 
@@ -31,5 +33,25 @@ class Grapher:
         plt.show()
         return fig
 
-    def top_3d_bar(self, x_labels, xdata, ydata, title):
-        pass
+    def top_country_langs(self, countries, langs):
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        x = np.arange(10)
+        y = np.arange(1, 11)
+        x_mesh, y_mesh = np.meshgrid(x, y)
+        x, y = x_mesh.ravel(), y_mesh.ravel()
+        z = np.zeros(len(x))
+        dx = np.ones(len(x)) * 0.5
+        dy = np.ones(len(x)) * 0.5
+        dz = np.arange(100)
+        lang_rank = np.transpose([arr[1] for arr in langs]).ravel()
+        ax.bar3d(x, y, z, dx, dy, lang_rank, shade=True)
+        ax.set_xlabel('Top Countries')
+        ax.set_xticks(x)
+        ax.set_xticklabels(countries)
+        ax.set_ylabel('Top Languages')
+        ax.set_yticks(y)
+        ax.set_zlabel('Repo Count')
+        plt.tight_layout()
+        plt.title('Top Locations and Their Top Languages')
+        plt.show()

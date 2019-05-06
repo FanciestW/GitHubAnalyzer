@@ -40,7 +40,7 @@ class Analyzer:
         """
         lang_count = self.data.groupby('repository_language').count()
         lang_rank = lang_count.sort_values('repository_url', ascending=False)
-        lang_rank = lang_rank.nlargest(num, ['repository_url'], keep='all')
+        lang_rank = lang_rank.nlargest(num, ['repository_url'])
         top_langs = lang_rank['repository_url']
         return (top_langs.index.values, top_langs.values)
 
@@ -61,11 +61,11 @@ class Analyzer:
         """
         country_count = self.data.groupby('actor_attributes_location').count()
         country_rank = country_count.sort_values('repository_url', ascending=False)
-        country_rank = country_count.nlargest(num, ['repository_url'], keep='all')
+        country_rank = country_count.nlargest(num, ['repository_url'])
         top_actor_countries = country_rank['repository_url']
         return (top_actor_countries.index.values, top_actor_countries.values)
 
-    def topRepoLocations(self, num):
+    def topRepoLocation(self, num):
         """
             Returns the top locations for creating repositories.
 
@@ -79,14 +79,19 @@ class Analyzer:
             list: tuple
                 A list of tuples containing the top locations based on repository count.
         """
+        location_dict = dict()
         unique_repos = self.data['repository_url'].value_counts().index.values
         for repo in unique_repos:
             owner = self.data[self.data['repository_url'] == repo].iloc[0]['repository_owner']
-            location = self.data[self.data['actor_attributes_login'] == owner]
-            if location:
-                print(location)
-            # owner_location = self.data[self.data['actor_attributes_login'] == owner]
-            # print(owner_location)
+            owner_actions = self.data[self.data['actor_attributes_login'] == owner]
+            if not owner_actions.empty:
+                location = owner_actions.iloc[0]['actor_attributes_location']
+                if location:
+                    if location in location_dict:
+                        location_dict[location] += 1
+                    else:
+                        location_dict[location] = 1
+        print(location_dict)
 
     def countryTopLanguages(self, country, num):
         """
@@ -107,7 +112,7 @@ class Analyzer:
         country_data = self.data.loc[self.data['actor_attributes_location'] == country]
         count = country_data.groupby('repository_language').count()
         lang_rank = count.sort_values('repository_url', ascending=False)
-        lang_rank = lang_rank.nlargest(num, ['repository_url'], keep='all')
+        lang_rank = lang_rank.nlargest(num, ['repository_url'])
         top_country_languages = lang_rank['repository_url']
         return (top_country_languages.index.values, top_country_languages.values)
 
