@@ -58,7 +58,7 @@ class Grapher:
 
     def watcher_contributor_scatter(self, data, repo_names):
         x = [watchers[0] for watchers in data]
-        y = [contributors[0] for contributors in data]
+        y = [contributors[1] for contributors in data]
         plt.scatter(x, y)
         plt.show()
         
