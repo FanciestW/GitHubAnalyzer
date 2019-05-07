@@ -6,9 +6,9 @@
 
 2) Repo popularity analysis
 
-    - [ ] What was the most popular repo during the time window in 2012? You can judge popularity by the total number of events that have occurred on the timeline during the window. Create a list of the top 10.
+    - [x] What was the most popular repo during the time window in 2012? You can judge popularity by the total number of events that have occurred on the timeline during the window. Create a list of the top 10.
 
-    - [ ] For the top 10 repos found in part (a), determine the relationship between the number of contributors to each repo with the number of watchers of the repo. Pick the maximum number of watchers recorded during the time window for the one value. To determine the contributors, count the number of users that were actors on the repo and subtract any whose only action was a watch event. Display this using a 2D scatter plot, using different colors for each repo's data.
+    - [x] For the top 10 repos found in part (a), determine the relationship between the number of contributors to each repo with the number of watchers of the repo. Pick the maximum number of watchers recorded during the time window for the one value. To determine the contributors, count the number of users that were actors on the repo and subtract any whose only action was a watch event. Display this using a 2D scatter plot, using different colors for each repo's data.
 
     - [ ] Track the keyword "security" in repo descriptions accessed during the time window in 2012. Graph a curve showing the number of repos related to security that were created in each of the years that records have been kept.
 
