@@ -29,7 +29,7 @@ def main():
     # Get Popular Repos
     pop_repos = analyzer.getPopularRepo(10)
     pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
-    grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos)
+    grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
 
 if __name__ == "__main__":
     main()

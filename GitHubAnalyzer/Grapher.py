@@ -1,6 +1,8 @@
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
+import re
 
 class Grapher:
 
@@ -59,6 +61,14 @@ class Grapher:
     def watcher_contributor_scatter(self, data, repo_names):
         x = [watchers[0] for watchers in data]
         y = [contributors[1] for contributors in data]
-        plt.scatter(x, y)
+        names = [re.sub('^((http[s]?:\/\/(www.)?)?github.com\/)', '', i, flags=re.IGNORECASE) for i in repo_names]
+        colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple',
+                  'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
+        plt.scatter(x, y, c=colors)
+        patches = [mpatches.Patch(color=colors[i], label=names[i]) for i in np.arange(len(names))]
+        plt.legend(handles=patches)
+        plt.xlabel("# of Watchers")
+        plt.ylabel("# of Contributors")
+        plt.title("Top 10 Repos: Watchers vs Contributors")
         plt.show()
         
