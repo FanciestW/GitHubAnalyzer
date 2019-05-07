@@ -9,7 +9,7 @@ def main():
         "--file",
         "-f",
         type=str,
-        default="data/sample0.csv", help="File with data to analyze."
+        default="data/sample.csv", help="File with data to analyze."
     )
     args = argparser.parse_args()
 
@@ -27,7 +27,9 @@ def main():
     # grapher.top_country_langs(top_actor_countries, top_country_langs)
 
     # Get Popular Repos
-    analyzer.getPopularRepo(10)
+    pop_repos = analyzer.getPopularRepo(10)
+    pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
+    grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos)
 
 if __name__ == "__main__":
     main()

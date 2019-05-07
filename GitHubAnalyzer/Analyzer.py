@@ -116,7 +116,7 @@ class Analyzer:
         top_country_languages = lang_rank['repository_url']
         return (top_country_languages.index.values, top_country_languages.values)
 
-    def getPopularRepo(self, num: int):
+    def getPopularRepo(self, num):
         """
             Gets the top most popular repositories.
 
@@ -133,3 +133,24 @@ class Analyzer:
         repo_event_count = self.data['repository_url'].value_counts()
         top10 = repo_event_count.nlargest(num)
         return (top10.index.values, top10.values)
+
+    def getWatchersContributors(self, repo_url):
+        """
+            Returns the peak number of watchers of a repository at any point
+            and unique contributors count as a tuple of ints.
+
+            Parameters
+            ----------
+            repo_url: str
+                The url of the target repository.
+            
+            Returns
+            -------
+            tuple: (int, int)
+                The peak number of watchers and unique contributors.
+        """
+        repo_data = self.data[self.data['repository_url'] == repo_url]
+        contribution_events = repo_data[repo_data['type'] != 'WatchEvent']
+        watchers = repo_data['repository_watchers'].max()
+        contributors = len(contribution_events['actor_attributes_login'].unique())
+        return (watchers, contributors)
