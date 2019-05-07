@@ -131,3 +131,5 @@ class Analyzer:
                 A list of strings containing the most popular repositories.
         """
         repo_event_count = self.data['repository_url'].value_counts()
+        top10 = repo_event_count.nlargest(num)
+        return (top10.index.values, top10.values)
