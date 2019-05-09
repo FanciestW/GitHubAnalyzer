@@ -154,3 +154,19 @@ class Analyzer:
         watchers = repo_data['repository_watchers'].max()
         contributors = len(contribution_events['actor_attributes_login'].unique())
         return (watchers, contributors)
+
+    def repoDescription(self, keyword):
+        """
+            Returns repositories with keyword in the repository description.
+
+            Parameters
+            ----------
+            keyword: str
+                The keyword to search for in the repository description.
+
+            Returns
+            -------
+            list: str
+                List of repository url that have the keyword in the description.
+        """
+        pass
