@@ -36,6 +36,19 @@ class Grapher:
         return fig
 
     def top_country_langs(self, countries, langs):
+        """
+            Graphs the top countries and their top languages.
+
+            Parameters
+            ----------
+            countries: list(str)
+                A list of strings containing country names.
+            
+            Returns
+            -------
+            pyplot.figure
+                A figure for includes the graph of the top country languages.
+        """
         fig = plt.figure()
         ax = Axes3D(fig)
         x = np.arange(10)
