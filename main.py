@@ -26,10 +26,14 @@ def main():
     # top_country_langs = [analyzer.countryTopLanguages(x, 10) for x in top_actor_countries]
     # grapher.top_country_langs(top_actor_countries, top_country_langs)
 
-    # Get Popular Repos
-    pop_repos = analyzer.getPopularRepo(10)
-    pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
-    grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
+    # # Get Popular Repos
+    # pop_repos = analyzer.getPopularRepo(10)
+    # pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
+    # grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
+
+    # Graph security repository creations dates based on year.
+    repo_years = analyzer.repoDescriptionSearchYears('security')
+    grapher.repoYearLine(repo_years, 'Security Repos Overtime')
 
 if __name__ == "__main__":
     main()

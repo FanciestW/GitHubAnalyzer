@@ -1,5 +1,5 @@
 import pandas as pd
-
+from datetime import datetime
 class Analyzer:
 
     filename: str                   # The name of the input file for data.
@@ -155,9 +155,10 @@ class Analyzer:
         contributors = len(contribution_events['actor_attributes_login'].unique())
         return (watchers, contributors)
 
-    def repoDescription(self, keyword):
+    def repoDescriptionSearchYears(self, keyword):
         """
-            Returns repositories with keyword in the repository description.
+            Returns a list of years and occurrence count corresponding to the years
+            a repository with a keyword in their description was created.
 
             Parameters
             ----------
@@ -166,7 +167,11 @@ class Analyzer:
 
             Returns
             -------
-            list: str
-                List of repository url that have the keyword in the description.
+            list: tuples
+                List of tuples containing the years and their occurrence count.
         """
-        pass
+        repos = self.data[self.data['repository_description'].str.contains(keyword, case=False, na=False)]
+        repos = repos.drop_duplicates('repository_url').sort_values(by=['repository_created_at'])
+        years = repos.groupby(repos['repository_created_at'].str[:4])
+        year_counts = [(g, years.groups[g].size) for g in years.groups]
+        return year_counts

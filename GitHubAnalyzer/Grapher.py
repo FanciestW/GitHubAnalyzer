@@ -84,4 +84,21 @@ class Grapher:
         plt.ylabel("# of Contributors")
         plt.title("Top 10 Repos: Watchers vs Contributors")
         plt.show()
-        
+
+    def repoYearLine(self, years_data, title):
+        years = [int(y[0]) for y in years_data]
+        year_counts = [int(y[1]) for y in years_data]
+        year_range = np.arange(min(years), max(years)+1).tolist()
+        data = list()
+        for y in year_range:
+            if y in years:
+                data.append(year_counts[years.index(y)])
+            else:
+                data.append(0)
+        fig, ax = plt.subplots()
+        ax.plot(data)
+        ax.set_xticks(np.arange(len(year_range)))
+        ax.set_xticklabels(year_range)
+        plt.title = title
+        plt.tight_layout()
+        plt.show()
