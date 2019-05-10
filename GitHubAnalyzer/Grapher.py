@@ -23,6 +23,11 @@ class Grapher:
                 The y label string to describe what is bring plotted.
             title: str
                 The title of the graph.
+
+            Returns
+            -------
+            pyplot.Figure
+                The py plot figure
         """
         fig, ax = plt.subplots()
         ax.bar(x_labels, data, align='edge')
@@ -48,6 +53,11 @@ class Grapher:
             -------
             pyplot.figure
                 A figure for includes the graph of the top country languages.
+
+            Returns
+            -------
+            pyplot.Figure
+                The py plot figure
         """
         fig = plt.figure()
         ax = Axes3D(fig)
@@ -70,6 +80,7 @@ class Grapher:
         plt.tight_layout()
         plt.title('Top Locations and Their Top Languages')
         plt.show()
+        return fig
 
     def watcher_contributor_scatter(self, data, repo_names):
         """
@@ -96,6 +107,21 @@ class Grapher:
         plt.show()
 
     def repoYearLine(self, years_data, title):
+        """
+            Graphs a line graph of repository creation over time.
+
+            Parameters
+            ----------
+            years_data: list(tuple)
+                A list of tuples where each tuple contains a year and repo count.
+            title: str
+                The title of the graph
+            
+            Returns
+            -------
+            pyplot.Figure
+                The py plot figure
+        """
         years = [int(y[0]) for y in years_data]
         year_counts = [int(y[1]) for y in years_data]
         year_range = np.arange(min(years), max(years)+1).tolist()
@@ -112,3 +138,4 @@ class Grapher:
         plt.title = title
         plt.tight_layout()
         plt.show()
+        return fig
