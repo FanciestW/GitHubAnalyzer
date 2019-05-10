@@ -72,6 +72,16 @@ class Grapher:
         plt.show()
 
     def watcher_contributor_scatter(self, data, repo_names):
+        """
+            Plots a scatter graph to compare watchers and contributors.
+
+            Parameters
+            ----------
+            data: list(tuple)
+                A list of tuples containing watcher and contributor data.
+            repo_names: list(str)
+                A list of repository names that correspond with each data point.
+        """
         x = [watchers[0] for watchers in data]
         y = [contributors[1] for contributors in data]
         names = [re.sub('^((http[s]?:\/\/(www.)?)?github.com\/)', '', i, flags=re.IGNORECASE) for i in repo_names]
