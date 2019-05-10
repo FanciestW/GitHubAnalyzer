@@ -176,13 +176,24 @@ class Analyzer:
         year_counts = [(g, years.groups[g].size) for g in years.groups]
         return year_counts
 
-    def timeOfDayActivity(self):
+    def timeOfDayActivity(self, chunks=4):
         """
             Gets activity count based on time of day. Broken into four 6 hour chunks.
+
+            Parameters
+            ----------
+            chunks: int
+                The number of chunks to break up a 24 hour day into. Must be a factor of 24.
 
             Returns
             -------
             list: (int)
                 A list of integers containing total activity at each time of day.
         """
-        pass
+        if 24 % chunks != 0:
+            raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
+        dt_data = pd.to_datetime(self.data['created_at'], format='%Y-%m-%d %H:%M:%S')
+        hours = dt_data.dt.hour
+        time_of_day = hours.floordiv(24/chunks)
+        counts = time_of_day.groupby(time_of_day).count()
+        return counts.values

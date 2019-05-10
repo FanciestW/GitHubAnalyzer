@@ -31,9 +31,13 @@ def main():
     # pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
     # grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
 
-    # Graph security repository creations dates based on year.
-    repo_years = analyzer.repoDescriptionSearchYears('security')
-    grapher.repoYearLine(repo_years, 'Security Repos Overtime')
+    # # Graph security repository creations dates based on year.
+    # repo_years = analyzer.repoDescriptionSearchYears('security')
+    # grapher.repoYearLine(repo_years, 'Security Repos Overtime')
+
+    # Graph the most active time of the day for GitHub activities.
+    time_of_day_count = analyzer.timeOfDayActivity(4)
+    grapher.activityHist(time_of_day_count, ['Early Morning', 'Morning', 'Afternoon', 'Evening'])
 
 if __name__ == "__main__":
     main()

@@ -139,3 +139,29 @@ class Grapher:
         plt.tight_layout()
         plt.show()
         return fig
+
+    def activityHist(self, data, xlabels):
+        """
+            A histogram of activity during certain times of the day.
+
+            Parameters
+            ----------
+            data: list(int)
+                Value of each histogram bin.
+            xlabels: list(str)
+                List of bin values that label the times of the day.
+
+            Returns
+            -------
+            pyplot.Figure
+                The py plot figure
+        """
+        fig, ax = plt.subplots()
+        ax.hist(np.arange(len(xlabels)), len(xlabels), weights=data, edgecolor='black', linewidth=1.2)
+        ax.set_xticks(np.arange(len(xlabels)))
+        ax.set_xticklabels(xlabels)
+        ax.set_ylabel('Activity Count')
+        plt.title('Time of Day Activity Histogram')
+        plt.show()
+        return fig
+    
