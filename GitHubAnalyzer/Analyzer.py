@@ -175,3 +175,14 @@ class Analyzer:
         years = repos.groupby(repos['repository_created_at'].str[:4])
         year_counts = [(g, years.groups[g].size) for g in years.groups]
         return year_counts
+
+    def timeOfDayActivity(self):
+        """
+            Gets activity count based on time of day. Broken into four 6 hour chunks.
+
+            Returns
+            -------
+            list: (int)
+                A list of integers containing total activity at each time of day.
+        """
+        pass
