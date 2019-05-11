@@ -157,9 +157,10 @@ class Grapher:
                 The py plot figure
         """
         fig, ax = plt.subplots()
-        ax.hist(np.arange(len(xlabels)), len(xlabels), weights=data, edgecolor='black', linewidth=1.2)
+        ax.hist(np.arange(len(xlabels)), np.arange(len(xlabels) + 1) - 0.5, weights=data, edgecolor='black')
         ax.set_xticks(np.arange(len(xlabels)))
         ax.set_xticklabels(xlabels)
+        ax.set(xticks=range(4), xlim=[-1, 4])
         ax.set_ylabel('Activity Count')
         plt.title('Time of Day Activity Histogram')
         plt.show()
