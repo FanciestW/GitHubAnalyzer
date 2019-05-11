@@ -197,3 +197,9 @@ class Analyzer:
         time_of_day = hours.floordiv(24/chunks)
         counts = time_of_day.groupby(time_of_day).count()
         return counts.values
+
+    def activityType(self):
+        """
+            Gets the count of the different activity types.
+        """
+        pass
