@@ -197,8 +197,8 @@ class Analyzer:
         dt_data = self.data.sort_values('created_at')
         dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
         event_group = dt_data.groupby(['tod', 'type']).groups
-        events = [{} for _ in range(chunks)]
+        test=dt_data['type'].unique()
+        events = [{t: 0 for t in dt_data['type'].unique()} for _ in range(chunks)]
         for t, e in event_group:
-            if e not in events[int(t)]:
-                events[int(t)][e] = event_group[(t, e)].size
+            events[int(t)][e] = event_group[(t, e)].size
         return events
