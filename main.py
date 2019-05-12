@@ -36,8 +36,9 @@ def main():
     # grapher.repoYearLine(repo_years, 'Security Repos Overtime')
 
     # Graph the most active time of the day for GitHub activities.
-    time_of_day_count = analyzer.timeOfDayActivity(4)
-    grapher.activityHist(time_of_day_count, ['Early Morning', 'Morning', 'Afternoon', 'Evening'])
+    activity = analyzer.timeOfDayActivity(4)
+    activity_count = [sum([t[key] for key in t]) for t in activity]
+    grapher.activityHist(activity_count, ['12AM-6AM', '6AM-12PM', '12PM-6PM', '6PM-12AM'])
 
 if __name__ == "__main__":
     main()

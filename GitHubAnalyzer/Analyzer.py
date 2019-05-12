@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime
 class Analyzer:
 
@@ -22,6 +23,7 @@ class Analyzer:
         else:
             print('File must be a JSON or CSV file.')
             sys.exit(0)
+        self.data['created_at'] = pd.to_datetime(self.data['created_at'], format='%Y-%m-%d %H:%M:%S')
 
     def topLanguages(self, num):
         """
@@ -187,19 +189,16 @@ class Analyzer:
 
             Returns
             -------
-            list: (int)
-                A list of integers containing total activity at each time of day.
+            list: (dict)
+                A list of dict containing total activity at each time of day and respective activity type.
         """
         if 24 % chunks != 0:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
-        dt_data = pd.to_datetime(self.data['created_at'], format='%Y-%m-%d %H:%M:%S')
-        hours = dt_data.dt.hour
-        time_of_day = hours.floordiv(24/chunks)
-        counts = time_of_day.groupby(time_of_day).count()
-        return counts.values
-
-    def activityType(self):
-        """
-            Gets the count of the different activity types.
-        """
-        pass
+        dt_data = self.data.sort_values('created_at')
+        dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
+        event_group = dt_data.groupby(['tod', 'type']).groups
+        events = [{} for _ in range(chunks)]
+        for t, e in event_group:
+            if e not in events[int(t)]:
+                events[int(t)][e] = event_group[(t, e)].size
+        return events
