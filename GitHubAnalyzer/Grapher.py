@@ -160,9 +160,39 @@ class Grapher:
         ax.hist(np.arange(len(xlabels)), np.arange(len(xlabels) + 1) - 0.5, weights=data, edgecolor='black')
         ax.set_xticks(np.arange(len(xlabels)))
         ax.set_xticklabels(xlabels)
-        ax.set(xticks=range(4), xlim=[-1, 4])
-        ax.set_ylabel('Activity Count')
+        ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
+        ax.set_ylabel('Activity Counts')
         plt.title('Time of Day Activity Histogram')
         plt.show()
         return fig
+
+    def activityTypesBar(self, data, xlabels, ylabels):
+        """
+            Graphs a stacked bar graph of activity type in each time period.
+
+            Parameters
+            ----------
+            data: list(list(int))
+                A list of list of integers that represent the activity data.
+            xlabels: list(str)
+                List of bin values that label the times of the day.
+            ylabels: list(str)
+                List of strings describing the event types in order.
+        """
+        fig, ax = plt.subplots()
+        bars = list()
+        for i in range(len(data)):
+            if i == 0:
+                bar = ax.bar(np.arange(len(xlabels)), data[i])
+                bars.append(bar)
+            else:
+                bar = ax.bar(np.arange(len(xlabels)), data[i], bottom=data[i-1])
+                bars.append(bar)
+        ax.set_xticks(np.arange(len(xlabels)))
+        ax.set_xticklabels(xlabels)
+        ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
+        ax.set_ylabel('Activity Counts')
+        plt.legend(tuple(bars), tuple(ylabels))
+        plt.title('Time of Day Activity Types')
+        plt.show()
     

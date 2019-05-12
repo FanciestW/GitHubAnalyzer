@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 from GitHubAnalyzer.Grapher import Grapher
 from GitHubAnalyzer.Analyzer import Analyzer
 
@@ -35,10 +36,15 @@ def main():
     # repo_years = analyzer.repoDescriptionSearchYears('security')
     # grapher.repoYearLine(repo_years, 'Security Repos Overtime')
 
-    # Graph the most active time of the day for GitHub activities.
+    # Graph the most active time of the day for GitHub activities types.
     activity = analyzer.timeOfDayActivity(4)
-    activity_count = [sum([t[key] for key in t]) for t in activity]
-    grapher.activityHist(activity_count, ['12AM-6AM', '6AM-12PM', '12PM-6PM', '6PM-12AM'])
+    times = ['12AM-6AM', '6AM-12PM', '12PM-6PM', '6PM-12AM']
+    types = [key for key in activity[0]]
+    activity_types = [[t[key] for key in t] for t in activity]
+    activity_count = [sum(i) for i in activity_types]
+    grapher.activityHist(activity_count, times)
+    types_data = np.transpose(np.array(activity_types))
+    grapher.activityTypesBar(types_data, times, types)
 
 if __name__ == "__main__":
     main()

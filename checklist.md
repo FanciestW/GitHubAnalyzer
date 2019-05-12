@@ -16,7 +16,7 @@
 
    - [x] For the time window in 2012, determine the time of day in which the most development activity occurs. Break the day into four 6-hour blocks and determine the number of development activities that occurred in each time block over the year. Create a simple histogram showing these results.
 
-   - [ ] Analyze the activity in part (a) further. Break down the type of development activities into the following categories: Create, Fork, Delete, Commit, Pull Request, Other. Create a stacked bar graph to show this information, where each bar is subdivided into portions for each of the activity types.
+   - [x] Analyze the activity in part (a) further. Break down the type of development activities into the following categories: Create, Fork, Delete, Commit, Pull Request, Other. Create a stacked bar graph to show this information, where each bar is subdivided into portions for each of the activity types.
 
    - [ ] Analyze the activity in part (a) further. Determine what quantity of the development activity was done by contributors in the USA vs. contributors in the rest of the world. Create a stacked bar graph showing this country developer breakdown. Again, you can omit development actions taken by users without a specified location.
 
