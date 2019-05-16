@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -63,7 +64,6 @@ class Analyzer:
         # print(data.head())
 
     def getCountry(self, location):
-        return "loc"
         location = str(location)
         if location.lower() == 'nan':
             return ''
