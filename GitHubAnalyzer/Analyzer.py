@@ -1,10 +1,34 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import requests
+import urllib
+from tqdm import tqdm
+from multiprocessing import Pool
+
+def getCountries(data):
+    p = Pool(2)
+    results = p.map(getCountriesApi, data)
+    return results
+
+def getCountriesApi(location):
+    location = str(location)
+    if location.lower() == 'nan':
+        return ''
+    # elif location in self.loc_cache:
+    #     return self.loc_cache[location]
+    else:
+        query = { 'location': location }
+        url_encoded_loc = urllib.parse.urlencode(query)
+        url = f'https://api.williamlin.tech/geocoder/country?{url_encoded_loc}'
+        res = requests.get(url)
+        return res.text
+
 class Analyzer:
 
     filename: str                   # The name of the input file for data.
     data: pd.DataFrame              # Data as pandas dataframes.
+    loc_cache = dict()              # Local cache of location countries.
 
     def __init__(self, file):
         """
@@ -23,7 +47,35 @@ class Analyzer:
         else:
             print('File must be a JSON or CSV file.')
             sys.exit(0)
+        
+        # Convert date time to datetime object.
         self.data['created_at'] = pd.to_datetime(self.data['created_at'], format='%Y-%m-%d %H:%M:%S')
+        
+        res = getCountries(['Boston', 'Fuzhou'])
+        print(res)
+        # Get country data from location.
+        # self.data['country'] = np.vectorize(self.getCountry)(self.data['actor_attributes_location'])
+        # countries = []
+        # pbar = tqdm(self.data['actor_attributes_location'])
+        # for loc in pbar:
+        #     countries.append(self.getCountry(loc))
+        #     pbar.set_description("Processing %s" %loc)
+        # print(data.head())
+
+    def getCountry(self, location):
+        return "loc"
+        location = str(location)
+        if location.lower() == 'nan':
+            return ''
+        # elif location in self.loc_cache:
+        #     return self.loc_cache[location]
+        else:
+            query = { 'location': location }
+            url_encoded_loc = urllib.parse.urlencode(query)
+            url = f'https://api.williamlin.tech/geocoder/country?{url_encoded_loc}'
+            res = requests.get(url)
+            self.loc_cache[location] = res.text
+            return self.loc_cache[location]
 
     def topLanguages(self, num):
         """
