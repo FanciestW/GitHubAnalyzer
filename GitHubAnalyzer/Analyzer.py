@@ -191,7 +191,7 @@ class Analyzer:
         year_counts = [(g, years.groups[g].size) for g in years.groups]
         return year_counts
 
-    def timeOfDayActivity(self, chunks=4):
+    def timeOfDayActivity(self, chunks=4, main_country='United States'):
         """
             Gets activity count based on time of day. Broken into four 6 hour chunks.
 
@@ -209,9 +209,39 @@ class Analyzer:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
         dt_data = self.data.sort_values('created_at')
         dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
+
+        # All time of day data.
         event_group = dt_data.groupby(['tod', 'type']).groups
         test=dt_data['type'].unique()
         events = [{t: 0 for t in dt_data['type'].unique()} for _ in range(chunks)]
         for t, e in event_group:
             events[int(t)][e] = event_group[(t, e)].size
+
+        # Main country vs other countries time of day data.
+        dt_data = dt_data.loc[dt_data['country'] != '']
+        main_tod = dt_data[dt_data['country'] == main_country]
+        other_tod = dt_data[dt_data['country'] != main_country]
+        main_counts = main_tod.groupby('tod').groups
+        other_counts = other_tod.groupby('tod').groups
+        # WIP::Returning country count data for tod.
         return events
+
+    def countryActivity(self, main_country='United States'):
+        """
+            Returns a tuples of the contribution count of the main country and
+            other countries. Will ignore activities without a proper country.
+
+            Parameters
+            ----------
+            main_country: str
+                The name of the country to compare to all other countries.
+
+            Returns
+            -------
+            tuple: (int, int)
+                The first int is the contribution count of the main country followed by all other countries.
+        """
+        countries = self.data.loc[self.data['country'] != '']['country'].to_frame()
+        main, _ = countries[countries['country'] == main_country].shape
+        others, _ = countries[countries['country'] != main_country].shape
+        return (main_count, other_count)

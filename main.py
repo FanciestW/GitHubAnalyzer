@@ -22,11 +22,11 @@ def main():
     # top_10_langs = analyzer.topLanguages(10)
     # grapher.top_bar_chart(top_10_langs[0], top_10_langs[1], 'Repo Count', 'Top 10 Languages')
 
-    # Get top 10 location for repository contributions and corresponding top 10 languages.
-    top_actor_countries = analyzer.topActorCountries(10)
-    grapher.top_bar_chart(top_actor_countries[0], top_actor_countries[1], 'Repo Count', 'Top 10 Countries')
-    top_country_langs = [analyzer.countryTopLanguages(x, 10) for x in top_actor_countries[0]]
-    grapher.top_country_langs(top_actor_countries[0], top_country_langs)
+    # # Get top 10 location for repository contributions and corresponding top 10 languages.
+    # top_actor_countries = analyzer.topActorCountries(10)
+    # grapher.top_bar_chart(top_actor_countries[0], top_actor_countries[1], 'Repo Count', 'Top 10 Countries')
+    # top_country_langs = [analyzer.countryTopLanguages(x, 10) for x in top_actor_countries[0]]
+    # grapher.top_country_langs(top_actor_countries[0], top_country_langs)
 
     # # Get Popular Repos
     # pop_repos = analyzer.getPopularRepo(10)
@@ -37,15 +37,17 @@ def main():
     # repo_years = analyzer.repoDescriptionSearchYears('security')
     # grapher.repoYearLine(repo_years, 'Security Repos Overtime')
 
-    # Graph the most active time of the day for GitHub activities types.
+    # # Graph the most active time of the day for GitHub activities types.
     activity = analyzer.timeOfDayActivity(4)
-    times = ['12AM-6AM', '6AM-12PM', '12PM-6PM', '6PM-12AM']
-    types = [key for key in activity[0]]
-    activity_types = [[t[key] for key in t] for t in activity]
-    activity_count = [sum(i) for i in activity_types]
-    grapher.activityHist(activity_count, times)
-    types_data = np.transpose(np.array(activity_types))
-    grapher.activityTypesBar(types_data, times, types)
+    # times = ['12AM-6AM', '6AM-12PM', '12PM-6PM', '6PM-12AM']
+    # types = [key for key in activity[0]]
+    # activity_types = [[t[key] for key in t] for t in activity]
+    # activity_count = [sum(i) for i in activity_types]
+    # grapher.activityHist(activity_count, times)
+    # types_data = np.transpose(np.array(activity_types))
+    # grapher.activityTypesBar(types_data, times, types)
+
+    main, other = analyzer.countryActivity()
 
 if __name__ == "__main__":
     main()
