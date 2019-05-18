@@ -7,10 +7,10 @@ def main():
     # Get CLI arguments for program required options.
     argparser = argparse.ArgumentParser(description='GitHub Data Analyzer.')
     argparser.add_argument(
-        "--file",
-        "-f",
+        '--file',
+        '-f',
         type=str,
-        default="data/sample.csv", help="File with data to analyze."
+        default='data/sample.csv', help='File with data to analyze.'
     )
     args = argparser.parse_args()
 
