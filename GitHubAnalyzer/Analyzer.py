@@ -221,18 +221,21 @@ class Analyzer:
         dt_data = dt_data.loc[dt_data['country'] != '']
         main_tod = dt_data[dt_data['country'] == main_country]
         other_tod = dt_data[dt_data['country'] != main_country]
-        main_counts = main_tod.groupby('tod').groups
-        other_counts = other_tod.groupby('tod').groups
+        main_counts = main_tod.groupby('tod')['repository_url'].count().values
+        other_counts = other_tod.groupby('tod')['repository_url'].count().values
+        country_data = list(zip(main_counts, other_counts))
         # WIP::Returning country count data for tod.
-        return events
+        return events, country_data
 
-    def countryActivity(self, main_country='United States'):
+    def countryActivity(self, chunks=4, main_country='United States'):
         """
             Returns a tuples of the contribution count of the main country and
             other countries. Will ignore activities without a proper country.
 
             Parameters
             ----------
+            chunks: int
+                The number of chunks to break up a 24 hour day into. Must be a factor of 24.
             main_country: str
                 The name of the country to compare to all other countries.
 
@@ -241,7 +244,15 @@ class Analyzer:
             tuple: (int, int)
                 The first int is the contribution count of the main country followed by all other countries.
         """
-        countries = self.data.loc[self.data['country'] != '']['country'].to_frame()
-        main, _ = countries[countries['country'] == main_country].shape
-        others, _ = countries[countries['country'] != main_country].shape
-        return (main_count, other_count)
+        if 24 % chunks != 0:
+            raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
+        dt_data = self.data.sort_values('created_at')
+        dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
+        
+        dt_data = dt_data.loc[dt_data['country'] != '']
+        main_tod = dt_data[dt_data['country'] == main_country]
+        other_tod = dt_data[dt_data['country'] != main_country]
+        main_counts = main_tod.groupby('tod')['repository_url'].count().values
+        other_counts = other_tod.groupby('tod')['repository_url'].count().values
+        country_data = list(zip(main_counts, other_counts))
+        return country_data
