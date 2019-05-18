@@ -1,3 +1,5 @@
+import matplotlib as mpl
+mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -30,13 +32,15 @@ class Grapher:
                 The py plot figure
         """
         fig, ax = plt.subplots()
-        ax.bar(x_labels, data, align='edge')
+        ax.bar(x_labels, data)
         for i, n in enumerate(data):
             s = str(int(n))
-            ax.text(i, n + 10, s)
+            ax.text(i - 0.1, n + 10, s)
         ax.set_ylabel(y_label)
         plt.tight_layout()
         plt.title(title)
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
         plt.show()
         return fig
 
@@ -79,6 +83,8 @@ class Grapher:
         ax.set_zlabel('Repo Count')
         plt.tight_layout()
         plt.title('Top Locations and Their Top Languages')
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
         plt.show()
         return fig
 
@@ -104,6 +110,8 @@ class Grapher:
         plt.xlabel("# of Watchers")
         plt.ylabel("# of Contributors")
         plt.title("Top 10 Repos: Watchers vs Contributors")
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
         plt.show()
 
     def repoYearLine(self, years_data, title):
@@ -137,6 +145,8 @@ class Grapher:
         ax.set_xticklabels(year_range)
         plt.title = title
         plt.tight_layout()
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
         plt.show()
         return fig
 
@@ -163,6 +173,8 @@ class Grapher:
         ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
         ax.set_ylabel('Activity Counts')
         plt.title('Time of Day Activity Histogram')
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
         plt.show()
         return fig
 
@@ -194,5 +206,8 @@ class Grapher:
         ax.set_ylabel('Activity Counts')
         plt.legend(tuple(bars), tuple(ylabels))
         plt.title('Time of Day Activity Types')
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
         plt.show()
+        return fig
     

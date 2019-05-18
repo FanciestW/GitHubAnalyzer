@@ -5,6 +5,7 @@ class Analyzer:
 
     filename: str                   # The name of the input file for data.
     data: pd.DataFrame              # Data as pandas dataframes.
+    countries: pd.DataFrame         # Location and Country data.
 
     def __init__(self, file):
         """
@@ -16,14 +17,23 @@ class Analyzer:
                 Path to input data file. Either a JSON or CSV file.
         """
         self.filename = file
+        cols = [
+            'repository_url', 'repository_created_at', 'repository_name',
+            'repository_owner', 'repository_open_issues', 'repository_watchers',
+            'repository_language', 'actor_attributes_login', 'actor_attributes_name',
+            'actor_attributes_location', 'created_at', 'actor', 'url', 'type'
+        ]
         if file.endswith('.csv'):
-            self.data = pd.read_csv(self.filename)
+            self.data = pd.read_csv(self.filename, usecols=cols)
         elif file.endswith('.json'):
             self.data = pd.read_json(self.filename, lines=True)
         else:
             print('File must be a JSON or CSV file.')
             sys.exit(0)
+        self.countries = pd.read_csv('data/countries.csv')
         self.data['created_at'] = pd.to_datetime(self.data['created_at'], format='%Y-%m-%d %H:%M:%S')
+        self.data = self.data.join(self.countries.set_index('actor_attributes_location'), on='actor_attributes_location')
+        self.data['country'].replace('No Results', '', inplace=True)
 
     def topLanguages(self, num):
         """
@@ -46,9 +56,9 @@ class Analyzer:
         top_langs = lang_rank['repository_url']
         return (top_langs.index.values, top_langs.values)
 
-    def topActorLocations(self, num):
+    def topActorCountries(self, num):
         """
-            Returns the top locations for repository contribution in descending order.
+            Returns the top countires for repository contribution in descending order.
 
             Parameters
             ----------
@@ -58,10 +68,10 @@ class Analyzer:
             Returns
             -------
             list: tuple
-                A list of tuples containing the top locations and their contribution
+                A list of tuples containing the top countries and their contribution
                 counts based on how many actors contributed to the repositories.
         """
-        country_count = self.data.groupby('actor_attributes_location').count()
+        country_count = self.data.loc[self.data['country'] != ''].groupby('country').count()
         country_rank = country_count.sort_values('repository_url', ascending=False)
         country_rank = country_count.nlargest(num, ['repository_url'])
         top_actor_countries = country_rank['repository_url']
@@ -116,7 +126,10 @@ class Analyzer:
         lang_rank = count.sort_values('repository_url', ascending=False)
         lang_rank = lang_rank.nlargest(num, ['repository_url'])
         top_country_languages = lang_rank['repository_url']
-        return (top_country_languages.index.values, top_country_languages.values)
+        size = len(top_country_languages)
+        languages = np.pad(top_country_languages.index.values, (0,num-size), 'constant', constant_values=(''))
+        values = np.pad(top_country_languages.values, (0,num-size), 'constant', constant_values=(0))
+        return (languages, values)
 
     def getPopularRepo(self, num):
         """
