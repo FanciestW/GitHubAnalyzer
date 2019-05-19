@@ -210,4 +210,28 @@ class Grapher:
         manager.resize(*manager.window.maxsize())
         plt.show()
         return fig
+
+    def countryContributionBar(self, data, xlabels, ylabels):
+        """
+        """
+        fig, ax = plt.subplots()
+        bars = list()
+        data = list(np.transpose(data))
+        for i in range(len(data)):
+            if i == 0:
+                bar = ax.bar(np.arange(len(xlabels)), data[i])
+                bars.append(bar)
+            else:
+                bar = ax.bar(np.arange(len(xlabels)), data[i], bottom=data[i-1])
+                bars.append(bar)
+        ax.set_xticks(np.arange(len(xlabels)))
+        ax.set_xticklabels(xlabels)
+        ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
+        ax.set_ylabel('Activity Counts')
+        plt.legend(tuple(bars), tuple(ylabels))
+        plt.title('Time of Day Activity By Country')
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
+        plt.show()
+        return fig
     

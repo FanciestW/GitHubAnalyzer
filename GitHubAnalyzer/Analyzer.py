@@ -224,7 +224,6 @@ class Analyzer:
         main_counts = main_tod.groupby('tod')['repository_url'].count().values
         other_counts = other_tod.groupby('tod')['repository_url'].count().values
         country_data = list(zip(main_counts, other_counts))
-        # WIP::Returning country count data for tod.
         return events, country_data
 
     def countryActivity(self, chunks=4, main_country='United States'):
