@@ -19,9 +19,10 @@ class Analyzer:
         self.filename = file
         cols = [
             'repository_url', 'repository_created_at', 'repository_name',
-            'repository_owner', 'repository_open_issues', 'repository_watchers',
-            'repository_language', 'actor_attributes_login', 'actor_attributes_name',
-            'actor_attributes_location', 'created_at', 'actor', 'url', 'type'
+            'repository_description', 'repository_owner', 'repository_open_issues',
+            'repository_watchers', 'repository_language', 'actor_attributes_login',
+            'actor_attributes_name', 'actor_attributes_location', 'created_at',
+            'actor', 'url', 'type'
         ]
         if file.endswith('.csv'):
             self.data = pd.read_csv(self.filename, usecols=cols)
@@ -255,3 +256,24 @@ class Analyzer:
         other_counts = other_tod.groupby('tod')['repository_url'].count().values
         country_data = list(zip(main_counts, other_counts))
         return country_data
+
+    def dayOfWeek(self, chunks=4):
+        """
+            Gets data on time of day activity broken into days of the week.
+
+            Parameters
+            ----------
+            chunks: int
+                The number of chunks to break up a 24 hour day into. Must be a factor of 24.
+
+            Returns
+            -------
+            list: list
+                A list of list containing chunks of data for each day of the week.
+        """
+        if 24 % chunks != 0:
+            raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
+        dt_data = self.data.sort_values('created_at')
+        dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
+        dt_data['weekday'] = dt_data['created_at'].dt.weekday()
+        print(dt_data)
