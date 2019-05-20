@@ -22,7 +22,7 @@ class Analyzer:
             'repository_description', 'repository_owner', 'repository_open_issues',
             'repository_watchers', 'repository_language', 'actor_attributes_login',
             'actor_attributes_name', 'actor_attributes_location', 'created_at',
-            'actor', 'url', 'type'
+            'payload_action', 'payload_number','payload_issue', 'actor', 'url', 'type'
         ]
         if file.endswith('.csv'):
             self.data = pd.read_csv(self.filename, usecols=cols)
@@ -283,3 +283,24 @@ class Analyzer:
             d = tod_data.groupby('weekday').count()['url'].values
             tod_by_week.append(d)
         return np.transpose(tod_by_week)
+
+    def issueResolution(self, repo_url):
+        """
+            Gets the resolution times for a repository's issues.
+
+            Parameters
+            ----------
+            repo_url: str
+                The respository url to analyze issue resolution time.
+            
+            Returns
+            -------
+            list: int
+                A list of all the issue resolution times. With last value being
+                the number of unresolved issues.
+        """
+        repo_issues = self.data[
+            (self.data['repository_url'] == repo_url) & 
+            (self.data['type'] == 'IssuesEvent')
+        ]
+        print(repo_issues[['repository_name', 'payload_number', 'payload_action', 'type']])
