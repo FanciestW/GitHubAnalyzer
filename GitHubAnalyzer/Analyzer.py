@@ -213,7 +213,6 @@ class Analyzer:
 
         # All time of day data.
         event_group = dt_data.groupby(['tod', 'type']).groups
-        test=dt_data['type'].unique()
         events = [{t: 0 for t in dt_data['type'].unique()} for _ in range(chunks)]
         for t, e in event_group:
             events[int(t)][e] = event_group[(t, e)].size
@@ -275,5 +274,6 @@ class Analyzer:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
         dt_data = self.data.sort_values('created_at')
         dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
-        dt_data['weekday'] = dt_data['created_at'].dt.weekday()
-        print(dt_data)
+        dt_data['weekday'] = dt_data['created_at'].dt.weekday
+        activity = dt_data.groupby(['tod', 'weekday']).groups
+        print(dt_data[['created_at', 'weekday']])
