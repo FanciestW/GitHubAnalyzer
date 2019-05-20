@@ -3,6 +3,7 @@ mpl.use("TkAgg")
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
+from matplotlib import animation
 import numpy as np
 import re
 
@@ -171,6 +172,7 @@ class Grapher:
         ax.set_xticks(np.arange(len(xlabels)))
         ax.set_xticklabels(xlabels)
         ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
+        ax.set_xlabel('Time of Day')
         ax.set_ylabel('Activity Counts')
         ax.set_title('Time of Day Activity Histogram')
         manager = plt.get_current_fig_manager()
@@ -203,9 +205,11 @@ class Grapher:
         ax.set_xticks(np.arange(len(xlabels)))
         ax.set_xticklabels(xlabels)
         ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
+        ax.set_xlabel('Time of Day')
         ax.set_ylabel('Activity Counts')
         ax.set_title('Time of Day Activity Types')
         plt.legend(tuple(bars), tuple(ylabels))
+        plt.tight_layout()
         manager = plt.get_current_fig_manager()
         manager.resize(*manager.window.maxsize())
         plt.show()
@@ -227,9 +231,51 @@ class Grapher:
         ax.set_xticks(np.arange(len(xlabels)))
         ax.set_xticklabels(xlabels)
         ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
+        ax.set_xlabel('Time of Day')
         ax.set_ylabel('Activity Counts')
         ax.set_title('Time of Day Activity By Country')
         plt.legend(tuple(bars), tuple(ylabels))
+        plt.tight_layout()
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
+        plt.show()
+        return fig
+
+    def weekday_animated_graph(self, data, xlabels):
+        """
+            Graphs an animated bar graph for activity during the time of day
+            within a week. Animates by changing bar from weekday to weekday.
+
+            Parameters
+            ----------
+            data: list(list)
+                A list of lists containing days of the week data for activity
+                broken into times of day data.
+        """
+        weekdays = [
+            'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+            'Friday', 'Saturday', 'Sunday'
+        ]
+        fig, ax = plt.subplots()
+        rects = ax.bar(range(4), np.zeros(4), align='center')
+        annotations = [ax.text(i - 0.1, n + 10, str(n)) for i, n in enumerate(np.zeros(4))]
+        ax.set_xticks(np.arange(len(xlabels)))
+        ax.set_xticklabels(xlabels)
+        ax.set(xticks=range(len(xlabels)), xlim=[-1, len(xlabels)])
+        ax.set_ylabel('Activity Counts')
+        ax.set_xlabel('Time of Day')
+        def animate(frame):
+            d = data[frame]
+            ax.set(xlim=(-1, 4), ylim=(0, max(d) + max(d)/10))
+            ax.set_title(f'{weekdays[frame]}\'s GitHub Activity Bar')
+            for i, n in enumerate(annotations):
+                n.set_position((i - 0.1, d[i] + 10))
+                n.set_text(str(d[i]))
+            for rect, h in zip(rects, d):
+                rect.set_height(h)
+            return rects
+        anim = animation.FuncAnimation(fig, animate, frames=len(data), interval=2000, blit=False)
+        plt.tight_layout()
         manager = plt.get_current_fig_manager()
         manager.resize(*manager.window.maxsize())
         plt.show()

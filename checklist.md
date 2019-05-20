@@ -20,7 +20,7 @@
 
    - [x] Analyze the activity in part (a) further. Determine what quantity of the development activity was done by contributors in the USA vs. contributors in the rest of the world. Create a stacked bar graph showing this country developer breakdown. Again, you can omit development actions taken by users without a specified location.
 
-   - [ ] What is the most active development day of the week? Using the data gathered in part (a), create an animation that shows the development activity broken down by which day of the week it occurred on in a bar graph, where the contents of the bar graph change over the weeks of the time window (this will not be a long animation).
+   - [x] What is the most active development day of the week? Using the data gathered in part (a), create an animation that shows the development activity broken down by which day of the week it occurred on in a bar graph, where the contents of the bar graph change over the weeks of the time window (this will not be a long animation).
 
    - [ ] For the most popular repo found in part (2.a) above, determine the time it has taken to resolve each issue in the repo that was opened during the time window. Display a histogram to show these issue handling times (pick some reasonable amount of time to represent an unresolved issue during the window).
 

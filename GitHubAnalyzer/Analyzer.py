@@ -269,11 +269,17 @@ class Analyzer:
             -------
             list: list
                 A list of list containing chunks of data for each day of the week.
+                Each list within the list represents the data for one weekday.
         """
         if 24 % chunks != 0:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
         dt_data = self.data.sort_values('created_at')
         dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
         dt_data['weekday'] = dt_data['created_at'].dt.weekday
-        activity = dt_data.groupby(['tod', 'weekday']).groups
-        print(dt_data[['created_at', 'weekday']])
+        activity = dt_data.groupby(['tod', 'weekday']).count()['url']
+        tod_by_week = list()
+        for i in range(chunks):
+            tod_data = dt_data.groupby('tod').get_group(i)[['url', 'weekday']]
+            d = tod_data.groupby('weekday').count()['url'].values
+            tod_by_week.append(d)
+        return np.transpose(tod_by_week)
