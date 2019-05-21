@@ -36,7 +36,7 @@ def main():
     # grapher.top_country_langs(top_actor_countries[0], top_country_langs)
 
     # Get Popular Repos
-    pop_repos = analyzer.getPopularRepo(10)
+    # pop_repos = analyzer.getPopularRepo(10)
     # pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
     # grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
 
@@ -59,7 +59,7 @@ def main():
     # weekday_data = analyzer.dayOfWeek()
     # grapher.weekday_animated_graph(weekday_data, times)
 
-    analyzer.issueResolution(pop_repos[0][1])
+    analyzer.issueResolution('https://github.com/mapserver/mapserver')
 
 if __name__ == "__main__":
     main()
