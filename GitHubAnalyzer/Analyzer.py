@@ -315,7 +315,6 @@ class Analyzer:
             tod_by_week.append(d)
         return np.transpose(tod_by_week)
 
-    @Halo(text='Loading', spinner='dots')
     def issueResolution(self, repo_url):
         """
             Gets the resolution times for a repository's issues.
