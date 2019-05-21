@@ -10,12 +10,19 @@ def main():
         '--file',
         '-f',
         type=str,
-        default='data/sample.csv', help='File with data to analyze.'
+        default='data/sample.csv',
+        help='File with data to analyze.'
+    )
+    argparser.add_argument(
+        '--dir',
+        '-d',
+        type=str,
+        help='Directory with all the input files as CSV files.'
     )
     args = argparser.parse_args()
 
     # Initialize data analyzer and results grapher.
-    analyzer = Analyzer(args.file)
+    analyzer = Analyzer(args.file, args.dir)
     grapher = Grapher()
 
     # # Get top 10 languages and graph on bar graph.
@@ -30,8 +37,8 @@ def main():
 
     # Get Popular Repos
     pop_repos = analyzer.getPopularRepo(10)
-    pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
-    grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
+    # pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
+    # grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
 
     # # Graph security repository creations dates based on year.
     # repo_years = analyzer.repoDescriptionSearchYears('security')
@@ -52,7 +59,7 @@ def main():
     # weekday_data = analyzer.dayOfWeek()
     # grapher.weekday_animated_graph(weekday_data, times)
 
-    analyzer.issueResolution(pop_repos[0][0])
+    analyzer.issueResolution(pop_repos[0][1])
 
 if __name__ == "__main__":
     main()

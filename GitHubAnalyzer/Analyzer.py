@@ -1,13 +1,16 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from tqdm import tqdm
+from halo import Halo
+import glob
 class Analyzer:
 
     filename: str                   # The name of the input file for data.
     data: pd.DataFrame              # Data as pandas dataframes.
     countries: pd.DataFrame         # Location and Country data.
 
-    def __init__(self, file):
+    def __init__(self, file, dir_path=None):
         """
             Create an Analyzer object and sets the dataframes to input file data.
 
@@ -15,8 +18,9 @@ class Analyzer:
             ----------
             file: str
                 Path to input data file. Either a JSON or CSV file.
+            dir: str
+                Optional directory path to multiple input csv files.
         """
-        self.filename = file
         cols = [
             'repository_url', 'repository_created_at', 'repository_name',
             'repository_description', 'repository_owner', 'repository_open_issues',
@@ -24,17 +28,44 @@ class Analyzer:
             'actor_attributes_name', 'actor_attributes_location', 'created_at',
             'payload_action', 'payload_number','payload_issue', 'actor', 'url', 'type'
         ]
-        if file.endswith('.csv'):
-            self.data = pd.read_csv(self.filename, usecols=cols)
-        elif file.endswith('.json'):
-            self.data = pd.read_json(self.filename, lines=True)
+        df_types = {
+            'repository_url': str, 'repository_created_at': str, 'repository_url': str,
+            'repository_description': str, 'repository_owner': str, 'repository_open_issues': str,
+            'repository_watchers': str, 'repository_language': str, 'actor_attributes_login': str,
+            'actor_attributes_name': str, 'actor_attributes_location': str, 'created_at': str,
+            'payload_action': str, 'payload_number': str, 'payload_issue': str, 'actor': str,
+            'url': str, 'type': str
+        }
+        if dir_path:
+            all_files = glob.glob(dir_path + '/*.csv')
+            li = []
+            pbar = tqdm(all_files)
+            for file in pbar:
+                pbar.set_description("Reading %s" % file)
+                df = pd.read_csv(file, usecols=cols, dtype=df_types, header=0)
+                li.append(df)
+            self.data = pd.concat(li, axis=0, ignore_index=True)
         else:
-            print('File must be a JSON or CSV file.')
-            sys.exit(0)
+            f_spinner = Halo(text='Loading', spinner='dots')
+            self.filename = file
+            if file.endswith('.csv'):
+                f_spinner.start()
+                self.data = pd.read_csv(self.filename, usecols=cols, dtype=df_types)
+                f_spinner.succeed(f'{file} Successfully Read!')
+            elif file.endswith('.json'):
+                f_spinner.start()
+                self.data = pd.read_json(self.filename, lines=True)
+                f_spinner.succeed(f'{file} Successfully Read!')
+            else:
+                print('File must be a JSON or CSV file.')
+                sys.exit(0)
+        spinner = Halo(text='Processing Data', spinner='dots')
+        spinner.start()
         self.countries = pd.read_csv('data/countries.csv')
         self.data['created_at'] = pd.to_datetime(self.data['created_at'], format='%Y-%m-%d %H:%M:%S')
         self.data = self.data.join(self.countries.set_index('actor_attributes_location'), on='actor_attributes_location')
         self.data['country'].replace('No Results', '', inplace=True)
+        spinner.succeed('Data Successfully Proccessed!')
 
     def topLanguages(self, num):
         """
@@ -284,6 +315,7 @@ class Analyzer:
             tod_by_week.append(d)
         return np.transpose(tod_by_week)
 
+    @Halo(text='Loading', spinner='dots')
     def issueResolution(self, repo_url):
         """
             Gets the resolution times for a repository's issues.
@@ -303,4 +335,10 @@ class Analyzer:
             (self.data['repository_url'] == repo_url) & 
             (self.data['type'] == 'IssuesEvent')
         ]
-        print(repo_issues[['repository_name', 'payload_number', 'payload_action', 'type']])
+        opened_issues = repo_issues[repo_issues['payload_action'] == 'opened']
+        closed_issues = repo_issues[repo_issues['payload_action'] == 'closed']
+        resolved_issues = opened_issues.merge(closed_issues, on='payload_number', how='outer')
+        open_times = opened_issues['created_at']
+        closed_times = closed_issues['created_at']
+        resolve_times = open_times['created_at']
+        print(resolved_issues[['repository_name', 'payload_number', 'payload_action', 'type']])
