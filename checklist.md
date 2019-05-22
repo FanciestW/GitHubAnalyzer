@@ -22,7 +22,7 @@
 
    - [x] What is the most active development day of the week? Using the data gathered in part (a), create an animation that shows the development activity broken down by which day of the week it occurred on in a bar graph, where the contents of the bar graph change over the weeks of the time window (this will not be a long animation).
 
-   - [ ] For the most popular repo found in part (2.a) above, determine the time it has taken to resolve each issue in the repo that was opened during the time window. Display a histogram to show these issue handling times (pick some reasonable amount of time to represent an unresolved issue during the window).
+   - [x] For the most popular repo found in part (2.a) above, determine the time it has taken to resolve each issue in the repo that was opened during the time window. Display a histogram to show these issue handling times (pick some reasonable amount of time to represent an unresolved issue during the window).
 
 Extra credit - perform another non-trivial analysis, perhaps one of the suggestions you made in your list of five tasks that was sent to me.
 
