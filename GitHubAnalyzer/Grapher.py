@@ -241,7 +241,7 @@ class Grapher:
         plt.show()
         return fig
 
-    def weekday_animated_graph(self, data, xlabels):
+    def weekdaysAnimated(self, data, xlabels):
         """
             Graphs an animated bar graph for activity during the time of day
             within a week. Animates by changing bar from weekday to weekday.
@@ -280,4 +280,24 @@ class Grapher:
         manager.resize(*manager.window.maxsize())
         plt.show()
         return fig
-    
+
+    def issueResolutionHist(self, data, title='Issue Resolution Times'):
+        """
+            Creates a histogram of the resolution times of issues.
+
+            Parameters
+            ----------
+            data: list(int)
+                A list of all the different times it takes to close issues in days.
+            title: str
+                The desired title of the graph.
+        """
+        fig, ax = plt.subplots()
+        ax.hist(data, np.arange(max(data)), edgecolor='black')
+        ax.set_xlabel('Issue Resolution Times (Days)')
+        ax.set_ylabel('Closed Issue Counts')
+        ax.set_title(title)
+        manager = plt.get_current_fig_manager()
+        manager.resize(*manager.window.maxsize())
+        plt.show()
+        return fig

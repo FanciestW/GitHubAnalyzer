@@ -82,10 +82,13 @@ class Analyzer:
                 A list of tuples containing the top languages and their
                 popularity based on how many repositories used that language.
         """
+        spinner = Halo(text='Analyzing Top Languages', spinner='dots')
+        spinner.start()
         lang_count = self.data.groupby('repository_language').count()
         lang_rank = lang_count.sort_values('repository_url', ascending=False)
         lang_rank = lang_rank.nlargest(num, ['repository_url'])
         top_langs = lang_rank['repository_url']
+        spinner.succeed('Top Languages Analysis Complete!')
         return (top_langs.index.values, top_langs.values)
 
     def topActorCountries(self, num):
@@ -103,39 +106,14 @@ class Analyzer:
                 A list of tuples containing the top countries and their contribution
                 counts based on how many actors contributed to the repositories.
         """
+        spinner = Halo(text='Analyzing Top Actor Countries', spinner='dots')
+        spinner.start()
         country_count = self.data.loc[self.data['country'] != ''].groupby('country').count()
         country_rank = country_count.sort_values('repository_url', ascending=False)
         country_rank = country_count.nlargest(num, ['repository_url'])
         top_actor_countries = country_rank['repository_url']
+        spinner.succeed('Top Country Analysis Complete!')
         return (top_actor_countries.index.values, top_actor_countries.values)
-
-    def topRepoLocation(self, num):
-        """
-            Returns the top locations for creating repositories.
-
-            Parameters
-            ----------
-            num: int
-                The number of top locations to return.
-
-            Returns
-            -------
-            list: tuple
-                A list of tuples containing the top locations based on repository count.
-        """
-        location_dict = dict()
-        unique_repos = self.data['repository_url'].value_counts().index.values
-        for repo in unique_repos:
-            owner = self.data[self.data['repository_url'] == repo].iloc[0]['repository_owner']
-            owner_actions = self.data[self.data['actor_attributes_login'] == owner]
-            if not owner_actions.empty:
-                location = owner_actions.iloc[0]['actor_attributes_location']
-                if location:
-                    if location in location_dict:
-                        location_dict[location] += 1
-                    else:
-                        location_dict[location] = 1
-        print(location_dict)
 
     def countryTopLanguages(self, country, num):
         """
@@ -153,6 +131,8 @@ class Analyzer:
             list: tuple
                 A list of tuples containing the top languages and their repository count.
         """
+        spinner = Halo(text='Analyzing Country Top Languages', spinner='dots')
+        spinner.start()
         country_data = self.data.loc[self.data['actor_attributes_location'] == country]
         count = country_data.groupby('repository_language').count()
         lang_rank = count.sort_values('repository_url', ascending=False)
@@ -161,6 +141,7 @@ class Analyzer:
         size = len(top_country_languages)
         languages = np.pad(top_country_languages.index.values, (0,num-size), 'constant', constant_values=(''))
         values = np.pad(top_country_languages.values, (0,num-size), 'constant', constant_values=(0))
+        spinner.succeed('Country Top Language Analysis Complete!')
         return (languages, values)
 
     def getPopularRepo(self, num):
@@ -177,8 +158,11 @@ class Analyzer:
             list: str
                 A list of strings containing the most popular repositories.
         """
+        spinner = Halo(text='Analyzing Most Popular Repositories', spinner='dots')
+        spinner.start()
         repo_event_count = self.data['repository_url'].value_counts()
         top10 = repo_event_count.nlargest(num)
+        spinner.succeed('Most Popular Repository Analysis Complete!')
         return (top10.index.values, top10.values)
 
     def getWatchersContributors(self, repo_url):
@@ -196,10 +180,13 @@ class Analyzer:
             tuple: (int, int)
                 The peak number of watchers and unique contributors.
         """
+        spinner = Halo(text='Analyzing Watchers and Contributors', spinner='dots')
+        spinner.start()
         repo_data = self.data[self.data['repository_url'] == repo_url]
         contribution_events = repo_data[repo_data['type'] != 'WatchEvent']
         watchers = repo_data['repository_watchers'].max()
         contributors = len(contribution_events['actor_attributes_login'].unique())
+        spinner.succeed('Watcher and Contributors Analysis Complete!')
         return (watchers, contributors)
 
     def repoDescriptionSearchYears(self, keyword):
@@ -217,10 +204,13 @@ class Analyzer:
             list: tuples
                 List of tuples containing the years and their occurrence count.
         """
+        spinner = Halo(text=f'Analyzing for "{keyword}"" Repositories', spinner='dots')
+        spinner.start()
         repos = self.data[self.data['repository_description'].str.contains(keyword, case=False, na=False)]
         repos = repos.drop_duplicates('repository_url').sort_values(by=['repository_created_at'])
         years = repos.groupby(repos['repository_created_at'].str[:4])
         year_counts = [(g, years.groups[g].size) for g in years.groups]
+        spinner.succeed(f'Anlysis of "{keyword}" Repositories Completed!')
         return year_counts
 
     def timeOfDayActivity(self, chunks=4, main_country='United States'):
@@ -237,6 +227,8 @@ class Analyzer:
             list: (dict)
                 A list of dict containing total activity at each time of day and respective activity type.
         """
+        spinner = Halo(text='Analyzing Time of Day Activities', spinner='dots')
+        spinner.start()
         if 24 % chunks != 0:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
         dt_data = self.data.sort_values('created_at')
@@ -255,6 +247,7 @@ class Analyzer:
         main_counts = main_tod.groupby('tod')['repository_url'].count().values
         other_counts = other_tod.groupby('tod')['repository_url'].count().values
         country_data = list(zip(main_counts, other_counts))
+        spinner.succeed('Time of Day Analysis Complete!')
         return events, country_data
 
     def countryActivity(self, chunks=4, main_country='United States'):
@@ -274,6 +267,8 @@ class Analyzer:
             tuple: (int, int)
                 The first int is the contribution count of the main country followed by all other countries.
         """
+        spinner = Halo(text='Analyzing Country Activities', spinner='dots')
+        spinner.start()
         if 24 % chunks != 0:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
         dt_data = self.data.sort_values('created_at')
@@ -285,6 +280,7 @@ class Analyzer:
         main_counts = main_tod.groupby('tod')['repository_url'].count().values
         other_counts = other_tod.groupby('tod')['repository_url'].count().values
         country_data = list(zip(main_counts, other_counts))
+        spinner.succeed('Country Activity Analysis Complete!')
         return country_data
 
     def dayOfWeek(self, chunks=4):
@@ -302,6 +298,8 @@ class Analyzer:
                 A list of list containing chunks of data for each day of the week.
                 Each list within the list represents the data for one weekday.
         """
+        spinner = Halo(text='Analyzing Days of the Week Activities', spinner='dots')
+        spinner.start()
         if 24 % chunks != 0:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
         dt_data = self.data.sort_values('created_at')
@@ -313,6 +311,7 @@ class Analyzer:
             tod_data = dt_data.groupby('tod').get_group(i)[['url', 'weekday']]
             d = tod_data.groupby('weekday').count()['url'].values
             tod_by_week.append(d)
+        spinner.succeed('Days of Week Activity Analysis Complete!')
         return np.transpose(tod_by_week)
 
     def issueResolution(self, repo_url):
@@ -330,14 +329,19 @@ class Analyzer:
                 A list of all the issue resolution times. With last value being
                 the number of unresolved issues.
         """
+        spinner = Halo(text='Analyzing Repository Issues', spinner='dots')
+        spinner.start()
         repo_issues = self.data[
             (self.data['repository_url'] == repo_url) & 
             (self.data['type'] == 'IssuesEvent')
-        ]
-        opened_issues = repo_issues[repo_issues['payload_action'] == 'opened']
-        closed_issues = repo_issues[repo_issues['payload_action'] == 'closed']
-        resolved_issues = opened_issues.merge(closed_issues, on='payload_number', how='outer')
-        open_times = opened_issues['created_at']
-        closed_times = closed_issues['created_at']
-        resolve_times = open_times['created_at']
-        print(resolved_issues[['repository_name', 'payload_number', 'payload_action', 'type']])
+        ].drop_duplicates().sort_values('created_at')[['payload_issue', 'payload_action', 'created_at']]
+        opened_issues = repo_issues[repo_issues['payload_action'] == 'opened'].sort_values('created_at').drop_duplicates(subset='payload_issue', keep='first')
+        closed_issues = repo_issues[repo_issues['payload_action'] == 'closed'].sort_values('created_at').drop_duplicates(subset='payload_issue', keep='last')
+        open_times = opened_issues[['payload_issue', 'created_at']]
+        closed_times = closed_issues[['payload_issue', 'created_at']]
+        issues = pd.merge(open_times, closed_times, on='payload_issue')
+        issues['resolution_time'] = issues['created_at_y'] - issues['created_at_x']
+        time_data = issues[issues['resolution_time'] > pd.Timedelta(0)]
+        resolution_times = time_data['resolution_time'].dt.days
+        spinner.succeed('Respository Issues Anaysis Complete!')
+        return resolution_times.values
