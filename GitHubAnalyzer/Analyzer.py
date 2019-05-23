@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from datetime import datetime
 from tqdm import tqdm
 from halo import Halo
 import glob
@@ -29,12 +28,11 @@ class Analyzer:
             'payload_action', 'payload_number','payload_issue', 'actor', 'url', 'type'
         ]
         df_types = {
-            'repository_url': str, 'repository_created_at': str, 'repository_url': str,
-            'repository_description': str, 'repository_owner': str, 'repository_open_issues': str,
-            'repository_watchers': str, 'repository_language': str, 'actor_attributes_login': str,
-            'actor_attributes_name': str, 'actor_attributes_location': str, 'created_at': str,
-            'payload_action': str, 'payload_number': str, 'payload_issue': str, 'actor': str,
-            'url': str, 'type': str
+            'repository_url': str, 'repository_created_at': str, 'repository_description': str,
+            'repository_owner': str, 'repository_open_issues': str, 'repository_watchers': str,
+            'repository_language': str, 'actor_attributes_login': str, 'actor_attributes_name': str,
+            'actor_attributes_location': str, 'created_at': str, 'payload_action': str,
+            'payload_number': str, 'payload_issue': str, 'actor': str, 'url': str, 'type': str
         }
         if dir_path:
             all_files = glob.glob(dir_path + '/*.csv')
@@ -210,7 +208,7 @@ class Analyzer:
         repos = repos.drop_duplicates('repository_url').sort_values(by=['repository_created_at'])
         years = repos.groupby(repos['repository_created_at'].str[:4])
         year_counts = [(g, years.groups[g].size) for g in years.groups]
-        spinner.succeed(f'Anlysis of "{keyword}" Repositories Completed!')
+        spinner.succeed(f'Analysis of "{keyword}" Repositories Completed!')
         return year_counts
 
     def timeOfDayActivity(self, chunks=4, main_country='United States'):
@@ -305,7 +303,6 @@ class Analyzer:
         dt_data = self.data.sort_values('created_at')
         dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
         dt_data['weekday'] = dt_data['created_at'].dt.weekday
-        activity = dt_data.groupby(['tod', 'weekday']).count()['url']
         tod_by_week = list()
         for i in range(chunks):
             tod_data = dt_data.groupby('tod').get_group(i)[['url', 'weekday']]
@@ -322,7 +319,7 @@ class Analyzer:
             ----------
             repo_url: str
                 The respository url to analyze issue resolution time.
-            
+
             Returns
             -------
             list: int
@@ -332,7 +329,7 @@ class Analyzer:
         spinner = Halo(text='Analyzing Repository Issues', spinner='dots')
         spinner.start()
         repo_issues = self.data[
-            (self.data['repository_url'] == repo_url) & 
+            (self.data['repository_url'] == repo_url) &
             (self.data['type'] == 'IssuesEvent')
         ].drop_duplicates().sort_values('created_at')[['payload_issue', 'payload_action', 'created_at']]
         opened_issues = repo_issues[repo_issues['payload_action'] == 'opened'].sort_values('created_at').drop_duplicates(subset='payload_issue', keep='first')
