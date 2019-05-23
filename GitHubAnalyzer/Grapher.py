@@ -48,7 +48,7 @@ def top_country_langs(countries, langs):
         ----------
         countries: list(str)
             A list of strings containing country names.
-        
+
         Returns
         -------
         pyplot.figure
@@ -68,7 +68,6 @@ def top_country_langs(countries, langs):
     z = np.zeros(len(x))
     dx = np.ones(len(x)) * 0.5
     dy = np.ones(len(x)) * 0.5
-    dz = np.arange(100)
     lang_rank = np.transpose([arr[1] for arr in langs]).ravel()
     ax.bar3d(x, y, z, dx, dy, lang_rank, shade=True)
     ax.set_xlabel('Top Countries')
@@ -216,7 +215,7 @@ def countryContributionBar(data, xlabels, ylabels):
     fig, ax = plt.subplots()
     bars = list()
     data = list(np.transpose(data))
-    for i in range(len(data)):
+    for i, _ in enumerate(data):
         if i == 0:
             bar = ax.bar(np.arange(len(xlabels)), data[i])
             bars.append(bar)
@@ -269,7 +268,7 @@ def weekdaysAnimated(data, xlabels):
         for rect, h in zip(rects, d):
             rect.set_height(h)
         return rects
-    animation.FuncAnimation(fig, animate, frames=len(data), interval=2000, blit=False)
+    _ = animation.FuncAnimation(fig, animate, frames=len(data), interval=2000, blit=False)
     plt.tight_layout()
     manager = plt.get_current_fig_manager()
     manager.resize(*manager.window.maxsize())

@@ -271,7 +271,7 @@ class Analyzer:
             raise ValueError('Bad chunk value. Chunk value must be factor of 24.')
         dt_data = self.data.sort_values('created_at')
         dt_data['tod'] = dt_data['created_at'].dt.hour.floordiv(24/chunks)
-        
+
         dt_data = dt_data.loc[dt_data['country'] != '']
         main_tod = dt_data[dt_data['country'] == main_country]
         other_tod = dt_data[dt_data['country'] != main_country]

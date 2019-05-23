@@ -24,24 +24,24 @@ def main():
     # Initialize data analyzer and results grapher.
     analyzer = Analyzer(args.file, args.dir)
 
-    # Get top 10 languages and graph on bar graph.
-    top_10_langs = analyzer.topLanguages(10)
-    Grapher.top_bar_chart(top_10_langs[0], top_10_langs[1], 'Repo Count', 'Top 10 Languages')
+    # # Get top 10 languages and graph on bar graph.
+    # top_10_langs = analyzer.topLanguages(10)
+    # Grapher.top_bar_chart(top_10_langs[0], top_10_langs[1], 'Repo Count', 'Top 10 Languages')
 
-    # Get top 10 location for repository contributions and corresponding top 10 languages.
-    top_actor_countries = analyzer.topActorCountries(10)
-    Grapher.top_bar_chart(top_actor_countries[0], top_actor_countries[1], 'Repo Count', 'Top 10 Countries')
-    top_country_langs = [analyzer.countryTopLanguages(x, 10) for x in top_actor_countries[0]]
-    Grapher.top_country_langs(top_actor_countries[0], top_country_langs)
+    # # Get top 10 location for repository contributions and corresponding top 10 languages.
+    # top_actor_countries = analyzer.topActorCountries(10)
+    # Grapher.top_bar_chart(top_actor_countries[0], top_actor_countries[1], 'Repo Count', 'Top 10 Countries')
+    # top_country_langs = [analyzer.countryTopLanguages(x, 10) for x in top_actor_countries[0]]
+    # Grapher.top_country_langs(top_actor_countries[0], top_country_langs)
 
-    # Get Popular Repos
-    pop_repos = analyzer.getPopularRepo(10)
-    pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
-    Grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
+    # # Get Popular Repos
+    # pop_repos = analyzer.getPopularRepo(10)
+    # pop_repos_watcher_contributors = [analyzer.getWatchersContributors(r) for r in pop_repos[0]]
+    # Grapher.watcher_contributor_scatter(pop_repos_watcher_contributors, pop_repos[0])
 
-    # Graph security repository creations dates based on year.
-    repo_years = analyzer.repoDescriptionSearchYears('security')
-    Grapher.repoYearLine(repo_years, 'Security Repos Overtime')
+    # # Graph security repository creations dates based on year.
+    # repo_years = analyzer.repoDescriptionSearchYears('security')
+    # Grapher.repoYearLine(repo_years, 'Security Repos Overtime')
 
     # Graph the most active time of the day for GitHub activities types.
     activity, country = analyzer.timeOfDayActivity(4)
@@ -59,8 +59,7 @@ def main():
     Grapher.weekdaysAnimated(weekday_data, times)
 
     # Graphs histogram of a repository's issue resolution time.
-    resolution_times = analyzer.issueResolution(pop_repos[0][1]
-    )
+    resolution_times = analyzer.issueResolution(pop_repos[0][1])
     Grapher.issueResolutionHist(resolution_times)
 
 if __name__ == "__main__":
