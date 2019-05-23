@@ -189,7 +189,7 @@ def activityTypesBar(data, xlabels, ylabels):
     """
     fig, ax = plt.subplots()
     bars = list()
-    for i in range(len(data)):
+    for i, _ in enumerate(data):
         if i == 0:
             bar = ax.bar(np.arange(len(xlabels)), data[i])
             bars.append(bar)

@@ -172,7 +172,7 @@ class Analyzer:
             ----------
             repo_url: str
                 The url of the target repository.
-            
+
             Returns
             -------
             tuple: (int, int)
