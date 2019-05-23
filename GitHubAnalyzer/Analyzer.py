@@ -73,7 +73,7 @@ class Analyzer:
             ----------
             num: int
                 The number of top languages to return.
-            
+
             Returns
             -------
             list: tuple
